@@ -112,6 +112,10 @@ public class ReactFontManager {
       }
     }
 
+    if (style > 0) {
+      return createTypeface(fontFamilyName, 0, assetManager);
+    }
+
     return Typeface.create(fontFamilyName, style);
   }
 
