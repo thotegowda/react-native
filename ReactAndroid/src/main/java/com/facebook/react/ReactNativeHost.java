@@ -18,6 +18,7 @@ import android.app.Application;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.devsupport.RedBoxHandler;
+import com.facebook.react.modules.core.ExceptionsManagerModule;
 import com.facebook.react.uimanager.UIImplementationProvider;
 
 /**
@@ -68,6 +69,7 @@ public abstract class ReactNativeHost {
       .setJSMainModuleName(getJSMainModuleName())
       .setUseDeveloperSupport(getUseDeveloperSupport())
       .setRedBoxHandler(getRedBoxHandler())
+      .setJsErrorHandler(getJsErrorHandler())
       .setUIImplementationProvider(getUIImplementationProvider())
       .setInitialLifecycleState(LifecycleState.BEFORE_CREATE);
 
@@ -88,6 +90,10 @@ public abstract class ReactNativeHost {
    * Get the {@link RedBoxHandler} to send RedBox-related callbacks to.
    */
   protected @Nullable RedBoxHandler getRedBoxHandler() {
+    return null;
+  }
+
+  protected @Nullable ExceptionsManagerModule.JsErrorHandler getJsErrorHandler() {
     return null;
   }
 

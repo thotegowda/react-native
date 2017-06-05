@@ -9,30 +9,45 @@
 
 package com.facebook.react.modules.core;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.BaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableType;
-import com.facebook.react.devsupport.interfaces.DevSupportManager;
 import com.facebook.react.common.JavascriptException;
 import com.facebook.react.common.ReactConstants;
+import com.facebook.react.devsupport.interfaces.DevSupportManager;
 import com.facebook.react.module.annotations.ReactModule;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 @ReactModule(name = ExceptionsManagerModule.NAME)
 public class ExceptionsManagerModule extends BaseJavaModule {
 
   protected static final String NAME = "ExceptionsManager";
 
+  public interface JsErrorHandler {
+    void handle(String title, ReadableArray details, int exceptionId);
+  }
+
   static private final Pattern mJsModuleIdPattern = Pattern.compile("(?:^|[/\\\\])(\\d+\\.js)$");
+
   private final DevSupportManager mDevSupportManager;
 
+  @Nullable
+  private JsErrorHandler handler;
+
   public ExceptionsManagerModule(DevSupportManager devSupportManager) {
+    this(devSupportManager, null);
+  }
+
+  public ExceptionsManagerModule(DevSupportManager devSupportManager, @Nullable JsErrorHandler handler) {
     mDevSupportManager = devSupportManager;
+    this.handler = handler;
   }
 
   @Override
@@ -95,6 +110,8 @@ public class ExceptionsManagerModule extends BaseJavaModule {
   private void showOrThrowError(String title, ReadableArray details, int exceptionId) {
     if (mDevSupportManager.getDevSupportEnabled()) {
       mDevSupportManager.showNewJSError(title, details, exceptionId);
+    } else if (handler != null) {
+      handler.handle(title, details, exceptionId);
     } else {
       throw new JavascriptException(stackTraceToString(title, details));
     }

@@ -57,6 +57,7 @@ import com.facebook.react.devsupport.interfaces.PackagerStatusCallback;
 import com.facebook.react.modules.appregistry.AppRegistry;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.ExceptionsManagerModule;
 import com.facebook.react.modules.core.ReactChoreographer;
 import com.facebook.react.modules.debug.interfaces.DeveloperSettings;
 import com.facebook.react.uimanager.DisplayMetricsHolder;
@@ -134,6 +135,7 @@ public class ReactInstanceManager {
   private final List<ReactPackage> mPackages;
   private final DevSupportManager mDevSupportManager;
   private final boolean mUseDeveloperSupport;
+  private final @Nullable ExceptionsManagerModule.JsErrorHandler mJsErrorHandler;
   private final @Nullable NotThreadSafeBridgeIdleDebugListener mBridgeIdleDebugListener;
   private @Nullable volatile ReactContext mCurrentReactContext;
   private final Context mApplicationContext;
@@ -219,6 +221,7 @@ public class ReactInstanceManager {
     NativeModuleCallExceptionHandler nativeModuleCallExceptionHandler,
     JSCConfig jscConfig,
     @Nullable RedBoxHandler redBoxHandler,
+    @Nullable ExceptionsManagerModule.JsErrorHandler jsErrorHandler,
     boolean lazyNativeModulesEnabled,
     boolean lazyViewManagersEnabled,
     boolean setupReactContextInBackgroundEnabled,
@@ -241,6 +244,7 @@ public class ReactInstanceManager {
         mJSMainModuleName,
         useDeveloperSupport,
         redBoxHandler);
+    mJsErrorHandler = jsErrorHandler;
     mBridgeIdleDebugListener = bridgeIdleDebugListener;
     mLifecycleState = initialLifecycleState;
     mUIImplementationProvider = uiImplementationProvider;
@@ -259,6 +263,11 @@ public class ReactInstanceManager {
   public DevSupportManager getDevSupportManager() {
     return mDevSupportManager;
   }
+
+  public ExceptionsManagerModule.JsErrorHandler getJsErrorHandler() {
+    return mJsErrorHandler;
+  }
+
 
   public MemoryPressureRouter getMemoryPressureRouter() {
     return mMemoryPressureRouter;

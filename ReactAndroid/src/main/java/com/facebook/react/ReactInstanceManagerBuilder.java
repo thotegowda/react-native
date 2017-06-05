@@ -18,6 +18,7 @@ import com.facebook.react.cxxbridge.JSBundleLoader;
 import com.facebook.react.devsupport.interfaces.DevSupportManager;
 import com.facebook.react.devsupport.RedBoxHandler;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+import com.facebook.react.modules.core.ExceptionsManagerModule;
 import com.facebook.react.uimanager.UIImplementationProvider;
 
 /**
@@ -40,6 +41,7 @@ public class ReactInstanceManagerBuilder {
   protected @Nullable Activity mCurrentActivity;
   protected @Nullable DefaultHardwareBackBtnHandler mDefaultHardwareBackBtnHandler;
   protected @Nullable RedBoxHandler mRedBoxHandler;
+  protected @Nullable ExceptionsManagerModule.JsErrorHandler mJsErrorHandler;
   protected boolean mLazyNativeModulesEnabled;
   protected boolean mLazyViewManagersEnabled;
   protected boolean mSetupReactContextInBackground;
@@ -178,6 +180,11 @@ public class ReactInstanceManagerBuilder {
     return this;
   }
 
+  public ReactInstanceManagerBuilder setJsErrorHandler(@Nullable ExceptionsManagerModule.JsErrorHandler handler) {
+    mJsErrorHandler = handler;
+    return this;
+  }
+
   public ReactInstanceManagerBuilder setLazyNativeModulesEnabled(boolean lazyNativeModulesEnabled) {
     mLazyNativeModulesEnabled = lazyNativeModulesEnabled;
     return this;
@@ -243,6 +250,7 @@ public class ReactInstanceManagerBuilder {
       mNativeModuleCallExceptionHandler,
       mJSCConfig,
       mRedBoxHandler,
+      mJsErrorHandler,
       mLazyNativeModulesEnabled,
       mLazyViewManagersEnabled,
       mSetupReactContextInBackground,
